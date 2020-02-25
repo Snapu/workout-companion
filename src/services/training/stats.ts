@@ -14,8 +14,8 @@ export class Stats {
       .set("millisecond", 0);
 
     return sets
+      .filter(set => dayjs(set.date).isAfter(beginningOfWeek))
       .map(set => set.date.toDateString())
-      .filter(date => dayjs(date).isAfter(beginningOfWeek))
       .filter(this.isUnique).length;
   }
 

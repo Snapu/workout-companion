@@ -94,27 +94,21 @@ export default class ExerciseSelection extends Vue {
   }
 
   private async calcTrainedThisWeek(): Promise<void> {
-    const sets = await exerciseSets.getSets();
-    this.exercises.map(
-      exercise =>
-        (exercise.trainedThisWeek = stats.daysTrainedThisWeek(
-          sets.filter(set => set.exercise === exercise.exercise.name)
-        ))
-    );
+    const allSets = await exerciseSets.getSets();
+    this.exercises.forEach(exercise => {
+      const sets = allSets.filter(
+        set => set.exercise === exercise.exercise.name
+      );
+      exercise.trainedThisWeek = stats.daysTrainedThisWeek(sets);
+    });
   }
 
   private calcCategoryTrainedThisWeek(): void {
-    this.exercises
-      .map(exercise => exercise.trainedThisWeek)
-      .forEach((trainedThisWeek, i) => {
-        this.exercises.forEach(exercise => {
-          if (
-            this.exercises[i].exercise.category === exercise.exercise.category
-          ) {
-            this.exercises[i].categoryTrainedThisWeek += trainedThisWeek;
-          }
-        });
-      });
+    this.exercises.forEach(current => {
+      current.categoryTrainedThisWeek = this.exercises
+        .filter(other => other.exercise.category === current.exercise.category)
+        .reduce((acc, curr) => acc + curr.trainedThisWeek, 0);
+    });
   }
 
   protected sort(): void {
