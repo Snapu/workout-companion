@@ -1,6 +1,6 @@
 <template>
   <div v-if="charts.length">
-    <span class="overline pb-5">Your Progress</span>
+    <span class="overline pb-5">Your progress</span>
     <p v-if="!sets.length">
       No data available yet for this exercise.
     </p>
@@ -24,13 +24,12 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import exerciseSets, { ExerciseSet } from "../services/training/exerciseSets";
 import stats from "../services/training/stats";
-import dayjs from "dayjs";
 
 type ChartData = { title: string; values: number[] };
 
 @Component
 export default class Chart extends Vue {
-  @Prop() private exercise!: string;
+  @Prop({ required: true }) private exercise!: string;
 
   private sets: ExerciseSet[] = [];
   private charts: ChartData[] = [];

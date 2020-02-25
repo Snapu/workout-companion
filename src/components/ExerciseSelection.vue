@@ -18,9 +18,7 @@
                 @click="select(exercise)"
               >
                 <v-list-item-content>
-                  <v-list-item-title>{{
-                    exercise.exercise.name
-                  }}</v-list-item-title>
+                  <v-list-item-title>{{ exercise.name }}</v-list-item-title>
                   <v-list-item-subtitle>{{
                     renderSubtitle(exercise)
                   }}</v-list-item-subtitle>
@@ -46,20 +44,18 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import exercises, { Exercise } from "../services/training/exercises";
-import exerciseSets, { ExerciseSet } from "../services/training/exerciseSets";
+import exerciseSets from "../services/training/exerciseSets";
 import stats from "../services/training/stats";
 
-type ExerciseWithStats = {
-  trainedThisWeek: number;
-  categoryTrainedThisWeek: number;
-  exercise: Exercise;
-};
+interface ExerciseWithStats extends Exercise {
+  dates: string[];
+  score: number;
+}
 
 @Component
 export default class ExerciseSelection extends Vue {
   private open = false;
   private exercises: ExerciseWithStats[] = [];
-  private headers = [{ text: "Exercise", value: "name" }];
   private search = "";
 
   @Prop({ type: Array, default: [] })
@@ -67,10 +63,8 @@ export default class ExerciseSelection extends Vue {
 
   private get selectableExercises(): ExerciseWithStats[] {
     return this.exercises
-      .filter(e => !this.selectedExercises.includes(e.exercise.name))
-      .filter(e =>
-        e.exercise.name.toLowerCase().includes(this.search.toLowerCase())
-      );
+      .filter(e => !this.selectedExercises.includes(e.name))
+      .filter(e => e.name.toLowerCase().includes(this.search.toLowerCase()));
   }
 
   private mounted(): void {
@@ -78,50 +72,40 @@ export default class ExerciseSelection extends Vue {
   }
 
   private select(exercise: ExerciseWithStats): void {
-    this.$emit("selected", exercise.exercise.name);
+    this.$emit("selected", exercise.name);
     this.open = false;
   }
 
   private async getExercisesAndStats(): Promise<void> {
-    this.exercises = (await exercises.getExercises()).map(exercise => ({
-      categoryTrainedThisWeek: 0,
-      trainedThisWeek: 0,
-      exercise
-    }));
-    await this.calcTrainedThisWeek();
-    this.calcCategoryTrainedThisWeek();
-    this.sort();
-  }
-
-  private async calcTrainedThisWeek(): Promise<void> {
     const allSets = await exerciseSets.getSets();
-    this.exercises.forEach(exercise => {
-      const sets = allSets.filter(
-        set => set.exercise === exercise.exercise.name
-      );
-      exercise.trainedThisWeek = stats.daysTrainedThisWeek(sets);
-    });
+    const allExercises = (await exercises.getExercises()) as ExerciseWithStats[];
+    this.exercises = allExercises
+      .map(exercise => {
+        exercise.dates = stats.daysTrainedThisWeek(
+          allSets.filter(set => set.exercise === exercise.name)
+        );
+        return exercise;
+      })
+      .map((exercise, i, array) => {
+        exercise.score = array
+          .filter(other => other.category === exercise.category)
+          .map(other => other.dates)
+          .flat()
+          .filter(this.isUnique).length;
+        return exercise;
+      })
+      .sort((a, b) => a.score - b.score);
   }
 
-  private calcCategoryTrainedThisWeek(): void {
-    this.exercises.forEach(current => {
-      current.categoryTrainedThisWeek = this.exercises
-        .filter(other => other.exercise.category === current.exercise.category)
-        .reduce((acc, curr) => acc + curr.trainedThisWeek, 0);
-    });
-  }
-
-  protected sort(): void {
-    this.exercises.sort(
-      (a, b) => a.categoryTrainedThisWeek - b.categoryTrainedThisWeek
-    );
+  private isUnique(element: string, index: number, array: string[]): boolean {
+    return array.indexOf(element) === index;
   }
 
   private renderSubtitle(exercise: ExerciseWithStats): string {
-    if (exercise.categoryTrainedThisWeek < 1) {
+    if (exercise.score < 1) {
       return "Start training these muscles!";
     }
-    if (exercise.categoryTrainedThisWeek < 2) {
+    if (exercise.score < 2) {
       return "At least one more to go!";
     } else {
       return "";

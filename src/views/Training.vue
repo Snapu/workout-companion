@@ -14,7 +14,7 @@
             <span>{{ exercise }}</span>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <Sets :exercise="exercise" class="mb-5" />
+            <Sets :date="date" :exercise="exercise" class="mb-5" />
             <v-divider></v-divider>
             <Chart :exercise="exercise" />
           </v-expansion-panel-content>
@@ -34,18 +34,31 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import Chart from "@/components/Chart.vue";
 import ExerciseSelection from "@/components/ExerciseSelection.vue";
 import Header from "@/components/Header.vue";
 import Sets from "@/components/Sets.vue";
-import dayjs from "dayjs";
-import spreadsheet from "../services/spreadsheet/spreadsheetApi";
+import exerciseSets from "../services/training/exerciseSets";
 
 @Component({ components: { Chart, ExerciseSelection, Header, Sets } })
 export default class Training extends Vue {
   private activePanel = 0;
+  private date = new Date();
   private exercises: string[] = [];
+
+  private mounted(): void {
+    this.restoreTraining();
+  }
+
+  private async restoreTraining(): Promise<void> {
+    const sets = await exerciseSets.getSets(undefined, this.date);
+    this.exercises = sets.map(set => set.exercise).filter(this.isUnique);
+  }
+
+  private isUnique(element: string, index: number, array: string[]): boolean {
+    return array.indexOf(element) === index;
+  }
 
   private addExercise(exercise: string): void {
     this.exercises.push(exercise);

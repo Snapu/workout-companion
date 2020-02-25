@@ -22,10 +22,10 @@ export default class Login extends Vue {
 
   private async mounted(): Promise<void> {
     if (await this.$gapi.isSignedIn()) {
-      this.$router.push(Login.SUCCESS_PAGE);
+      this.$router.replace({ name: Login.SUCCESS_PAGE });
     } else {
       this.$gapi.listenUserSignIn(() => {
-        this.$router.push(Login.SUCCESS_PAGE);
+        this.$router.replace({ name: Login.SUCCESS_PAGE });
       });
     }
   }

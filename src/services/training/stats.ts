@@ -5,7 +5,7 @@ type Data = Record<string, string | number>;
 type GroupedData = Record<string, Data[]>;
 
 export class Stats {
-  public daysTrainedThisWeek(sets: ExerciseSet[]): number {
+  public daysTrainedThisWeek(sets: ExerciseSet[]): string[] {
     const beginningOfWeek = dayjs()
       .set("day", 1)
       .set("hour", 0)
@@ -16,7 +16,7 @@ export class Stats {
     return sets
       .filter(set => dayjs(set.date).isAfter(beginningOfWeek))
       .map(set => set.date.toDateString())
-      .filter(this.isUnique).length;
+      .filter(this.isUnique);
   }
 
   public lastTrained(sets: ExerciseSet[]): number[] {

@@ -2,11 +2,11 @@
   <v-container class="pa-0" fill-height>
     <v-col>
       <v-card>
-        <v-card-title>Connect to Spreadsheet</v-card-title>
+        <v-card-title>Connect to spreadsheet</v-card-title>
         <v-card-text>
           <p>
-            If you using this App for the first time you can let it create a
-            spreadsheet in your Google Drive to store your training date.
+            If you are using this app for the first time you can create a new
+            spreadsheet in your Google Drive to store your workout data.
           </p>
           <p>Otherwise, you can pick an existing spreadsheet.</p>
         </v-card-text>
@@ -40,12 +40,12 @@ export default class PickSpreadsheet extends Vue {
     this.createLoading = true;
     await spreadsheet.create();
     this.createLoading = false;
-    this.$router.push("training");
+    this.$router.replace({ name: "training" });
   }
 
   private async pick(): Promise<void> {
     if (await spreadsheet.pick()) {
-      this.$router.push("training");
+      this.$router.replace({ name: "training" });
     }
   }
 }

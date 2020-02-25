@@ -1,6 +1,5 @@
 import { SpreadsheetNotPickedError } from "./spreadsheetErrors";
 import { State } from "../state";
-// this API services shouldnt have a dependeny to our data
 import spreadsheetTemplate, { sheets } from "./spreadsheetTemplate";
 
 class SpreadsheetApi {
@@ -33,9 +32,6 @@ class SpreadsheetApi {
     });
   }
 
-  /**
-   * TODO move outside because it dependend to our data (belongs not to API)
-   */
   public async create(): Promise<void> {
     const response = await gapi.client.sheets.spreadsheets.create(
       {},
@@ -52,12 +48,6 @@ class SpreadsheetApi {
     }
   }
 
-  /**
-   * TODO move outside because it dependend to our data (belongs not to API)
-   * @param sheetTitle
-   * @param columnIdx
-   * @param sortOrder
-   */
   public async sort(
     sheetTitle: string,
     columnIdx: number,

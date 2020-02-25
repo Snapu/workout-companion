@@ -72,7 +72,8 @@ import dayjs from "dayjs";
 
 @Component
 export default class Sets extends Vue {
-  @Prop() private exercise!: string;
+  @Prop({ default: new Date() }) private date!: Date;
+  @Prop({ required: true }) private exercise!: string;
 
   private sets: ExerciseSet[] = [];
 
@@ -89,7 +90,10 @@ export default class Sets extends Vue {
 
   private async restoreViewFromSpreadsheet(): Promise<void> {
     this.busy = true;
-    this.sets = await exerciseSets.getSets(this.exercise, new Date());
+    console.debug(
+      `restoring sets of ${this.exercise} from ${this.date.toDateString()}`
+    );
+    this.sets = await exerciseSets.getSets(this.exercise, this.date);
     this.busy = false;
   }
 
@@ -99,7 +103,7 @@ export default class Sets extends Vue {
     if (this.sets.length) {
       await exerciseSets.updateSets(this.sets);
     } else {
-      await exerciseSets.clearDay(new Date(), this.exercise);
+      await exerciseSets.clearDay(this.date, this.exercise);
     }
     this.busy = false;
   }
@@ -109,7 +113,7 @@ export default class Sets extends Vue {
       this.sets.length
         ? { ...this.sets[this.sets.length - 1] }
         : {
-            date: new Date(),
+            date: this.date,
             exercise: this.exercise,
             set: 1,
             reps: 0,

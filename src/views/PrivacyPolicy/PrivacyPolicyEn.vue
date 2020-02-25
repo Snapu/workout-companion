@@ -1,6 +1,6 @@
 <template>
   <v-container class="pa-0">
-    <v-btn icon large @click="$router.push({ name: 'training' })" class="ma-5"
+    <v-btn icon large @click="$router.go(-1)" class="ma-5"
       ><v-icon> mdi-arrow-left</v-icon></v-btn
     >
     <v-card>
