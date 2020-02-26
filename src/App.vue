@@ -39,11 +39,12 @@ h4 {
 #nav {
   text-align: center;
   padding: 30px;
+  font-size: 0.9rem;
+  color: var(--v-anchor-base);
 }
 
 #nav a {
   margin: 0 1rem;
-  font-size: 0.9rem;
   text-transform: uppercase;
   text-decoration: none;
 }

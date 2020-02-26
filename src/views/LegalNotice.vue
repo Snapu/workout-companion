@@ -1,9 +1,9 @@
 <template>
   <v-container class="pa-0">
-    <v-btn icon large @click="$router.go(-1)" class="ma-5"
+    <v-btn icon large @click="$router.go(-1)" class="my-3"
       ><v-icon> mdi-arrow-left</v-icon></v-btn
     >
-    <v-card>
+    <v-card tile>
       <v-card-text>
         <h1>Legal Notice</h1>
         <h2>Contact</h2>

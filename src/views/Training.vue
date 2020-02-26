@@ -3,7 +3,7 @@
     <Header />
     <!-- Exercises -->
     <v-row no-gutters class="pt-5">
-      <v-expansion-panels popout hover v-model="activePanel">
+      <v-expansion-panels tile popout hover v-model="activePanel">
         <v-expansion-panel v-for="(exercise, i) in exercises" :key="i">
           <v-expansion-panel-header>
             <span class="text-left">
