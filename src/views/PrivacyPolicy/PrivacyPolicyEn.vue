@@ -20,8 +20,8 @@
         </p>
         <h3>Workout Companion App</h3>
         <p>
-          In the Workout Companion App you can log your workout. The data is
-          only stored in Google Spreadsheet in your own Google Drive. From the
+          In the Workout Companion App you can log your workouts. The data is
+          only stored in a Google Spreadsheet in your own Google Drive. From the
           same Spreadsheet data is obtained to display your workout progress in
           the Workout Companion App.
         </p>
