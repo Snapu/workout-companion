@@ -1,64 +1,48 @@
 <template>
   <div>
     <v-simple-table>
-      <template v-slot:default>
-        <thead>
-          <tr>
-            <th class="text-left">Set</th>
-            <th class="text-left">Reps</th>
-            <th class="text-left">kg</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(set, i) in sets" :key="i">
-            <td>
-              <span class="title accent--text">{{ i + 1 }}</span>
-            </td>
-            <td>
-              <v-text-field
-                v-model="set.reps"
-                hide-details
-                single-line
-                type="number"
-                @change="syncToSpreadsheet"
-                :disabled="busy"
-              ></v-text-field>
-            </td>
-            <td>
-              <v-text-field
-                v-model="set.weight"
-                hide-details
-                single-line
-                type="number"
-                @change="syncToSpreadsheet"
-                :disabled="busy"
-              ></v-text-field>
-            </td>
-            <td class="text-center">
-              <v-btn icon @click="remove(i)" :disabled="busy">
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </td>
-          </tr>
-        </tbody>
-      </template>
+      <thead>
+        <tr>
+          <th class="text-left">Set</th>
+          <th class="text-left">Reps</th>
+          <th class="text-left">kg</th>
+          <th class="text-right">
+            <v-btn disabled icon :loading="busy"></v-btn>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(set, i) in sets" :key="i">
+          <td>
+            <span class="title accent--text">{{ i + 1 }}</span>
+          </td>
+          <td>
+            <v-text-field
+              v-model="set.reps"
+              hide-details
+              single-line
+              type="number"
+              @input="syncToSpreadsheet"
+            ></v-text-field>
+          </td>
+          <td>
+            <v-text-field
+              v-model="set.weight"
+              hide-details
+              single-line
+              type="number"
+              @input="syncToSpreadsheet"
+            ></v-text-field>
+          </td>
+          <td class="text-right">
+            <v-btn icon @click="remove(i)">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </td>
+        </tr>
+      </tbody>
     </v-simple-table>
-    <div class="progress-container">
-      <v-progress-linear
-        :active="busy"
-        height="2"
-        indeterminate
-      ></v-progress-linear>
-    </div>
-    <v-btn
-      class="my-3"
-      block
-      large
-      color="primary"
-      @click="add"
-      :disabled="busy"
-    >
+    <v-btn class="mt-5" block large color="primary" @click="add">
       add set
     </v-btn>
   </div>
@@ -124,9 +108,3 @@ export default class Sets extends Vue {
   }
 }
 </script>
-
-<style scoped>
-.progress-container {
-  height: 2px;
-}
-</style>
