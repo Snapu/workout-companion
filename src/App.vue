@@ -39,16 +39,13 @@ h4 {
 #nav {
   text-align: center;
   padding: 30px;
-  color: grey;
 }
 
 #nav a {
   margin: 0 1rem;
   font-size: 0.9rem;
-  font-weight: lighter;
   text-transform: uppercase;
   text-decoration: none;
-  color: grey;
 }
 
 #nav a.router-link-exact-active {
