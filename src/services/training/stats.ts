@@ -34,7 +34,8 @@ export class Stats {
   }
 
   public sumWeights(sets: ExerciseSet[]): number[] {
-    const days = this.groupBy("date", this.toData(sets));
+    const sortedSets = sets.sort((a, b) => a.date.getTime() - b.date.getTime());
+    const days = this.groupBy("date", this.toData(sortedSets));
     return Object.values(days)
       .map((sets: Data[]) => {
         return sets.reduce(
@@ -47,7 +48,8 @@ export class Stats {
   }
 
   public averageWeights(sets: ExerciseSet[]): number[] {
-    const days = this.groupBy("date", this.toData(sets));
+    const sortedSets = sets.sort((a, b) => a.date.getTime() - b.date.getTime());
+    const days = this.groupBy("date", this.toData(sortedSets));
     return Object.values(days)
       .map((sets: Data[]) => {
         return (
