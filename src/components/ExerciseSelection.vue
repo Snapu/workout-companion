@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn icon large @click="open = true">
+    <v-btn icon large class="ma-3" @click="open = true">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-bottom-sheet v-model="open" scrollable>
@@ -8,6 +8,10 @@
       <v-card tile>
         <v-card-actions>
           <v-btn icon @click="open = false"><v-icon>mdi-close</v-icon></v-btn>
+          <v-spacer></v-spacer>
+          <v-btn icon :href="url" target="_blank"
+            ><v-icon>mdi-pencil</v-icon></v-btn
+          >
         </v-card-actions>
         <v-card-text class="pa-0">
           <v-list two-line>
@@ -46,6 +50,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import exercises, { Exercise } from "../services/training/exercises";
 import exerciseSets from "../services/training/exerciseSets";
 import stats from "../services/training/stats";
+import spreadsheet from "../services/spreadsheet/spreadsheetApi";
 
 interface ExerciseWithStats extends Exercise {
   dates: string[];
@@ -60,6 +65,10 @@ export default class ExerciseSelection extends Vue {
 
   @Prop({ type: Array, default: [] })
   private selectedExercises!: string[];
+
+  private get url(): string {
+    return `https://docs.google.com/spreadsheets/d/${spreadsheet.spreadsheetId}/edit#gid=0`;
+  }
 
   private get selectableExercises(): ExerciseWithStats[] {
     return this.exercises
