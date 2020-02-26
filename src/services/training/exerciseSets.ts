@@ -51,6 +51,7 @@ export class ExerciseSets {
 
     if (ranges.length) {
       await spreadsheet.batchClearValues(ranges);
+      await spreadsheet.sort(ExerciseSets.SHEET_NAME, 0, "DESCENDING");
     }
   }
 
