@@ -3,15 +3,17 @@
     <Header />
     <!-- Exercises -->
     <v-row no-gutters class="pt-5">
-      <v-expansion-panels tile popout hover v-model="activePanel">
+      <v-expansion-panels class="ma-1" popout hover v-model="activePanel">
         <v-expansion-panel v-for="(exercise, i) in exercises" :key="i">
           <v-expansion-panel-header>
-            <span class="text-left">
+            <v-row>
               <v-btn icon @click="removeExercise(i)">
                 <v-icon>mdi-close</v-icon>
               </v-btn>
-            </span>
-            <span>{{ exercise }}</span>
+              <v-col>
+                <span>{{ exercise }}</span>
+              </v-col>
+            </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <Sets :date="date" :exercise="exercise" class="mb-5" />

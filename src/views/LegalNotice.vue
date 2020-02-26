@@ -3,7 +3,7 @@
     <v-btn icon large @click="$router.go(-1)" class="my-3"
       ><v-icon> mdi-arrow-left</v-icon></v-btn
     >
-    <v-card tile>
+    <v-card class="ma-1">
       <v-card-text>
         <h1>Legal Notice</h1>
         <h2>Contact</h2>
