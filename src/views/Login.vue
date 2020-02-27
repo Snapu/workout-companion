@@ -1,13 +1,17 @@
 <template>
   <v-container class="pa-0" fill-height>
-    <v-card class="ma-1">
-      <v-card-title>Workout Companion</v-card-title>
-      <v-card-actions>
-        <v-btn block large color="primary" @click="login()"
-          >login with Google</v-btn
-        >
-      </v-card-actions>
-    </v-card>
+    <v-row no-gutters>
+      <v-col>
+        <v-card class="ma-1">
+          <v-card-title>Workout Companion</v-card-title>
+          <v-card-actions>
+            <v-btn block large color="primary" @click="login()"
+              >login with Google</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
