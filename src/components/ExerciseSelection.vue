@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn icon large class="ma-3" @click="open = true">
+    <v-btn icon large class="ma-3" :loading="busy" @click="open = true">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-bottom-sheet v-model="open" scrollable>
@@ -62,6 +62,7 @@ export default class ExerciseSelection extends Vue {
   private open = false;
   private exercises: ExerciseWithStats[] = [];
   private search = "";
+  private busy = false;
 
   @Prop({ type: Array, default: [] })
   private selectedExercises!: string[];
@@ -86,6 +87,7 @@ export default class ExerciseSelection extends Vue {
   }
 
   private async getExercisesAndStats(): Promise<void> {
+    this.busy = true;
     const allSets = await exerciseSets.getSets();
     const allExercises = (await exercises.getExercises()) as ExerciseWithStats[];
     this.exercises = allExercises
@@ -104,6 +106,7 @@ export default class ExerciseSelection extends Vue {
         return exercise;
       })
       .sort((a, b) => a.score - b.score);
+    this.busy = false;
   }
 
   private isUnique(element: string, index: number, array: string[]): boolean {
