@@ -13,6 +13,7 @@ export const sheets = [
       ["Langhantel Kniebeuge im Ausfallschritt", "Beine"],
       ["Latzug zur Brust", "Lat"],
       ["Seilzug Rudern zum Hals", "Rücken"],
+      ["Seilzug Rudern eng", "Rücken"],
       ["Langhantel Kreuzheben", "Beine"],
       ["Klimmzüge", "Lat"],
       ["Langhantel Kniebeugen", "Beine"],
