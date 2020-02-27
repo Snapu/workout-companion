@@ -45,7 +45,7 @@ import exerciseSets from "../services/training/exerciseSets";
 
 @Component({ components: { Chart, ExerciseSelection, Header, Sets } })
 export default class Training extends Vue {
-  private activePanel = 0;
+  private activePanel: number | null = null;
   private date = new Date();
   private exercises: string[] = [];
 
