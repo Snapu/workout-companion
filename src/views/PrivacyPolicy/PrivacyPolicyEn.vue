@@ -440,7 +440,11 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { Kpi } from "../../services/kpi";
 
 @Component
-export default class PrivacyPolicyEn extends Vue {}
+export default class PrivacyPolicyEn extends Vue {
+  @Kpi("VIEW_LEGAL_NOTICE")
+  private mounted(): void {}
+}
 </script>

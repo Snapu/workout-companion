@@ -42,6 +42,7 @@ import ExerciseSelection from "@/components/ExerciseSelection.vue";
 import Header from "@/components/Header.vue";
 import Sets from "@/components/Sets.vue";
 import exerciseSets from "../services/training/exerciseSets";
+import { Kpi } from "../services/kpi";
 
 @Component({ components: { Chart, ExerciseSelection, Header, Sets } })
 export default class Training extends Vue {
@@ -49,6 +50,7 @@ export default class Training extends Vue {
   private date = new Date();
   private exercises: string[] = [];
 
+  @Kpi("VIEW_TRAINING")
   private mounted(): void {
     this.restoreTraining();
   }

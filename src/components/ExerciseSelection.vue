@@ -51,6 +51,7 @@ import exercises, { Exercise } from "../services/training/exercises";
 import exerciseSets from "../services/training/exerciseSets";
 import stats from "../services/training/stats";
 import spreadsheet from "../services/spreadsheet/spreadsheetApi";
+import { Kpi } from "../services/kpi";
 
 interface ExerciseWithStats extends Exercise {
   dates: string[];
@@ -81,6 +82,7 @@ export default class ExerciseSelection extends Vue {
     this.getExercisesAndStats();
   }
 
+  @Kpi("SELECT_EXERCISE")
   private select(exercise: ExerciseWithStats): void {
     this.$emit("selected", exercise.name);
     this.open = false;

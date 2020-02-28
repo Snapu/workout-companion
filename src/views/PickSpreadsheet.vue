@@ -33,11 +33,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import spreadsheet from "../services/spreadsheet/spreadsheetApi";
+import { Kpi } from "../services/kpi";
 
 @Component
 export default class PickSpreadsheet extends Vue {
   private createLoading = false;
 
+  @Kpi("CREATE_SPREADSHEET")
   private async create(): Promise<void> {
     this.createLoading = true;
     await spreadsheet.create();
@@ -45,6 +47,7 @@ export default class PickSpreadsheet extends Vue {
     this.$router.replace({ name: "training" });
   }
 
+  @Kpi("PICK_SPREADSHEET")
   private async pick(): Promise<void> {
     if (await spreadsheet.pick()) {
       this.$router.replace({ name: "training" });

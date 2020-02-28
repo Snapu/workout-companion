@@ -30,9 +30,13 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { Kpi } from "../services/kpi";
 
 @Component
 export default class LegalNotice extends Vue {
   private version = process.env.VUE_APP_VERSION || "1.0.0";
+
+  @Kpi("VIEW_LEGAL_NOTICE")
+  private mounted(): void {}
 }
 </script>

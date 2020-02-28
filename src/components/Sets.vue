@@ -52,6 +52,8 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import exerciseSets, { ExerciseSet } from "../services/training/exerciseSets";
 import { Debounce } from "../services/debounce";
+import { Kpi } from "../services/kpi";
+
 import dayjs from "dayjs";
 
 @Component
@@ -81,7 +83,8 @@ export default class Sets extends Vue {
     this.busy = false;
   }
 
-  @Debounce(1000)
+  @Debounce(3000)
+  @Kpi("SYNC_SETS")
   private async syncToSpreadsheet(): Promise<void> {
     this.busy = true;
     if (this.sets.length) {
