@@ -20,7 +20,7 @@ class KpiLogger {
 
   public async log(data: any): Promise<void> {
     console.debug("KpiLogger:", data);
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV !== "production") {
       return;
     }
     try {
