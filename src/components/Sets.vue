@@ -83,7 +83,7 @@ export default class Sets extends Vue {
     this.busy = false;
   }
 
-  @Debounce(3000)
+  @Debounce(1000)
   @Kpi("SYNC_SETS")
   private async syncToSpreadsheet(): Promise<void> {
     this.busy = true;
