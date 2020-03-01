@@ -18,7 +18,7 @@
           </td>
           <td>
             <v-text-field
-              v-model="set.reps"
+              v-model.number="set.reps"
               hide-details
               single-line
               type="number"
@@ -27,7 +27,7 @@
           </td>
           <td>
             <v-text-field
-              v-model="set.weight"
+              v-model.number="set.weight"
               hide-details
               single-line
               type="number"
@@ -53,8 +53,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import exerciseSets, { ExerciseSet } from "../services/training/exerciseSets";
 import { Debounce } from "../services/debounce";
 import { Kpi } from "../services/kpi";
-
-import dayjs from "dayjs";
+import bus from "../bus";
 
 @Component
 export default class Sets extends Vue {
@@ -93,6 +92,7 @@ export default class Sets extends Vue {
       await exerciseSets.clearDay(this.date, this.exercise);
     }
     this.busy = false;
+    bus.$emit("updated:sets");
   }
 
   private async add(): Promise<void> {

@@ -24,6 +24,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import exerciseSets, { ExerciseSet } from "../services/training/exerciseSets";
 import stats from "../services/training/stats";
+import bus from "../bus";
 
 type ChartData = { title: string; values: number[] };
 
@@ -36,22 +37,26 @@ export default class Chart extends Vue {
 
   private mounted(): void {
     this.prepareData();
+    bus.$on("updated:sets", () => this.prepareData());
   }
 
   private async prepareData(): Promise<void> {
     this.sets = await exerciseSets.getSets(this.exercise);
-    this.charts.push({
-      title: "average weight (kg)",
-      values: stats.averageWeights(this.sets)
-    });
-    this.charts.push({
-      title: "sum of all reps (kg)",
-      values: stats.sumWeights(this.sets)
-    });
-    this.charts.push({
-      title: "break between trainings (d)",
-      values: stats.lastTrained(this.sets)
-    });
+    this.charts.length = 0;
+    this.charts = [
+      {
+        title: "average weight (kg)",
+        values: stats.averageWeights(this.sets)
+      },
+      {
+        title: "sum of all reps (kg)",
+        values: stats.sumWeights(this.sets)
+      },
+      {
+        title: "break between trainings (d)",
+        values: stats.lastTrained(this.sets)
+      }
+    ];
   }
 }
 </script>
