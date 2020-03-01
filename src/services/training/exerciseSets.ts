@@ -56,9 +56,15 @@ export class ExerciseSets {
   }
 
   private updateCache(sets: ExerciseSet[]): void {
+    const exercise = sets[0].exercise;
+    const date = sets[0].date;
     this.cache = this.cache
       .filter(
-        set => set.date !== sets[0].date && set.exercise !== sets[0].exercise
+        set =>
+          !(
+            set.exercise === exercise &&
+            set.date.toDateString() === date.toDateString()
+          )
       )
       .concat(sets);
   }
