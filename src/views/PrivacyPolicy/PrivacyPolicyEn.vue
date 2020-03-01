@@ -444,7 +444,7 @@ import { Kpi } from "../../services/kpi";
 
 @Component
 export default class PrivacyPolicyEn extends Vue {
-  @Kpi("VIEW_LEGAL_NOTICE")
+  @Kpi("VIEW_PRIVACY_POLICY_EN")
   private mounted(): void {}
 }
 </script>
