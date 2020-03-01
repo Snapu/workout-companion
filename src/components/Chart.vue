@@ -7,6 +7,7 @@
     <div v-else v-for="chart in charts" :key="chart.title" class="pb-5">
       <span class="accent--text px-3">{{ chart.title }}</span>
       <v-sparkline
+        v-if="chart.values.length > 1"
         auto-draw
         smooth
         line-width="1"
@@ -16,6 +17,9 @@
         :value="chart.values"
         color="#5C7137"
       ></v-sparkline>
+      <div v-else class="accent--text text-center display-1 ma-3">
+        {{ chart.values[0] || "N/A" }}
+      </div>
     </div>
   </div>
 </template>
