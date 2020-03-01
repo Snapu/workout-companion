@@ -21,6 +21,8 @@
             </p>
             <h2>Version</h2>
             <p>{{ version }}</p>
+            <h2>Support Code</h2>
+            <p>{{ loggerId }}</p>
           </v-card-text>
         </v-card>
       </v-col>
@@ -30,11 +32,13 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Kpi } from "../services/kpi";
+import logger, { Kpi } from "../services/kpi";
 
 @Component
 export default class LegalNotice extends Vue {
   private version = process.env.VUE_APP_VERSION || "1.0.0";
+
+  private loggerId = logger.id;
 
   @Kpi("VIEW_LEGAL_NOTICE")
   private mounted(): void {}

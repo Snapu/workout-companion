@@ -4,7 +4,7 @@ import { State } from "./state";
 
 class KpiLogger {
   @State()
-  private id: string | null = null;
+  public id: string | null = null;
   private stackdriver: StackdriverLogger;
 
   constructor() {
