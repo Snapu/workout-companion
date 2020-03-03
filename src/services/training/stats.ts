@@ -48,20 +48,27 @@ export class Stats {
   }
 
   public averageWeights(sets: ExerciseSet[]): number[] {
+    return this.average(sets, "weight");
+  }
+
+  public averageReps(sets: ExerciseSet[]): number[] {
+    return this.average(sets, "reps");
+  }
+
+  private average(sets: ExerciseSet[], property: string): number[] {
     const sortedSets = sets.sort((a, b) => a.date.getTime() - b.date.getTime());
     const days = this.groupBy("date", this.toData(sortedSets));
     return Object.values(days)
       .map((sets: Data[]) => {
         return (
           sets.reduce(
-            (acc: number, curr: Data) => acc + (curr.weight as number),
+            (acc: number, curr: Data) => acc + (curr[property] as number),
             0
           ) / sets.length
         );
       })
       .map(Math.round);
   }
-
   private groupBy(property: string, data: Data[]): GroupedData {
     return data.reduce((acc: GroupedData, curr: Data) => {
       const key = (curr as any)[property];

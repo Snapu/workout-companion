@@ -35,6 +35,7 @@
           <v-text-field
             filled
             hide-details
+            clearable
             label="Search exercise"
             append-icon="mdi-magnify"
             v-model="search"

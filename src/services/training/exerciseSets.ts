@@ -33,7 +33,7 @@ export class ExerciseSets {
       ExerciseSets.SHEET_NAME,
       this.toValues(sets)
     );
-    this.updateCache(sets);
+    this.cache = this.cache.concat(sets);
   }
 
   public async clearDay(date: Date, exercise: string): Promise<void> {
@@ -52,21 +52,18 @@ export class ExerciseSets {
     if (ranges.length) {
       await spreadsheet.batchClearValues(ranges);
       await spreadsheet.sort(ExerciseSets.SHEET_NAME, 0, "DESCENDING");
+      this.clearDayInCache(date, exercise);
     }
   }
 
-  private updateCache(sets: ExerciseSet[]): void {
-    const exercise = sets[0].exercise;
-    const date = sets[0].date;
-    this.cache = this.cache
-      .filter(
-        set =>
-          !(
-            set.exercise === exercise &&
-            set.date.toDateString() === date.toDateString()
-          )
-      )
-      .concat(sets);
+  private clearDayInCache(date: Date, exercise: string): void {
+    this.cache = this.cache.filter(
+      set =>
+        !(
+          set.exercise === exercise &&
+          set.date.toDateString() === date.toDateString()
+        )
+    );
   }
 
   private async getLastValues(): Promise<string[][]> {

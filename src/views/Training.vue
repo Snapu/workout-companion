@@ -17,7 +17,6 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <Sets :date="date" :exercise="exercise" class="mb-5" />
-            <v-divider></v-divider>
             <Chart :exercise="exercise" />
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -25,12 +24,12 @@
     </v-row>
     <!-- Add exercise -->
     <v-row no-gutters>
-      <v-spacer />
+      <v-spacer></v-spacer>
       <ExerciseSelection
         :selectedExercises="exercises"
         @selected="addExercise"
       />
-      <v-spacer />
+      <v-spacer></v-spacer>
     </v-row>
   </v-container>
 </template>

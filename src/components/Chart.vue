@@ -1,27 +1,40 @@
 <template>
-  <div v-if="charts.length">
-    <span class="overline pb-5">Your progress</span>
-    <p v-if="!sets.length">
-      No data available yet for this exercise.
-    </p>
-    <div v-else v-for="chart in charts" :key="chart.title" class="pb-5">
-      <span class="accent--text px-3">{{ chart.title }}</span>
+  <v-row v-if="charts.length" no-gutters>
+    <v-col cols="12"><span class="overline pb-5">Your progress</span></v-col>
+    <v-col v-if="!sets.length" cols="12">
+      <p>No data available yet for this exercise.</p>
+    </v-col>
+    <v-col
+      v-else
+      v-for="chart in charts"
+      :key="chart.title"
+      class="pb-5"
+      cols="12"
+      xs="12"
+      md="6"
+    >
+      <v-row align="start" justify="space-between" class="px-4">
+        <span class="font-italic">{{ chart.title }}</span>
+        <span class="accent--text display-1"
+          >{{ chart.values[chart.values.length - 1] || "0" }}
+          {{ chart.unit }}</span
+        >
+      </v-row>
       <v-sparkline
-        v-if="chart.values.length > 1"
+        class="accent--text body-1"
+        fill
         auto-draw
         smooth
+        height="60"
         line-width="1"
-        label-size="14"
-        padding="14"
+        label-size="11"
+        padding="13"
         :labels="chart.values"
         :value="chart.values"
         color="#5C7137"
       ></v-sparkline>
-      <div v-else class="accent--text text-center display-1 ma-3">
-        {{ chart.values[0] || "N/A" }}
-      </div>
-    </div>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -30,7 +43,7 @@ import exerciseSets, { ExerciseSet } from "../services/training/exerciseSets";
 import stats from "../services/training/stats";
 import bus from "../bus";
 
-type ChartData = { title: string; values: number[] };
+type ChartData = { title: string; unit: string; values: number[] };
 
 @Component
 export default class Chart extends Vue {
@@ -49,15 +62,23 @@ export default class Chart extends Vue {
     this.charts.length = 0;
     this.charts = [
       {
-        title: "average weight (kg)",
+        title: "average weight",
+        unit: "kg",
         values: stats.averageWeights(this.sets)
       },
       {
-        title: "sum of all reps (kg)",
+        title: "average reps",
+        unit: "",
+        values: stats.averageReps(this.sets)
+      },
+      {
+        title: "sum of all reps",
+        unit: "kg",
         values: stats.sumWeights(this.sets)
       },
       {
-        title: "break between trainings (d)",
+        title: "break between trainings",
+        unit: "d",
         values: stats.lastTrained(this.sets)
       }
     ];
