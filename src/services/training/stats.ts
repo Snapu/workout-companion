@@ -34,8 +34,7 @@ export class Stats {
   }
 
   public sumWeights(sets: ExerciseSet[]): number[] {
-    const sortedSets = sets.sort((a, b) => a.date.getTime() - b.date.getTime());
-    const days = this.groupBy("date", this.toData(sortedSets));
+    const days = this.groupBy("date", this.toData(sets));
     return Object.values(days)
       .map((sets: Data[]) => {
         return sets.reduce(
@@ -55,9 +54,13 @@ export class Stats {
     return this.average(sets, "reps");
   }
 
+  public numberOfSets(sets: ExerciseSet[]): number[] {
+    const days = this.groupBy("date", this.toData(sets));
+    return Object.values(days).map((sets: Data[]) => sets.length);
+  }
+
   private average(sets: ExerciseSet[], property: string): number[] {
-    const sortedSets = sets.sort((a, b) => a.date.getTime() - b.date.getTime());
-    const days = this.groupBy("date", this.toData(sortedSets));
+    const days = this.groupBy("date", this.toData(sets));
     return Object.values(days)
       .map((sets: Data[]) => {
         return (
@@ -69,6 +72,7 @@ export class Stats {
       })
       .map(Math.round);
   }
+
   private groupBy(property: string, data: Data[]): GroupedData {
     return data.reduce((acc: GroupedData, curr: Data) => {
       const key = (curr as any)[property];
@@ -81,11 +85,13 @@ export class Stats {
   }
 
   private toData(sets: ExerciseSet[]): Data[] {
-    return sets.map(set => ({
-      date: set.date.toLocaleDateString(),
-      reps: set.reps,
-      weight: set.weight
-    }));
+    return sets
+      .sort((a, b) => a.date.getTime() - b.date.getTime())
+      .map(set => ({
+        date: set.date.toLocaleDateString(),
+        reps: set.reps,
+        weight: set.weight
+      }));
   }
 
   private isUnique(

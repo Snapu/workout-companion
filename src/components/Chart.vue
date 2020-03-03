@@ -8,7 +8,7 @@
       v-else
       v-for="chart in charts"
       :key="chart.title"
-      class="pb-5"
+      class="pb-4"
       cols="12"
       xs="12"
       md="6"
@@ -25,7 +25,7 @@
         fill
         auto-draw
         smooth
-        height="60"
+        height="50"
         line-width="1"
         label-size="11"
         padding="13"
@@ -72,13 +72,18 @@ export default class Chart extends Vue {
         values: stats.averageReps(this.sets)
       },
       {
+        title: "number of sets",
+        unit: "",
+        values: stats.numberOfSets(this.sets)
+      },
+      {
         title: "sum of all reps",
         unit: "kg",
         values: stats.sumWeights(this.sets)
       },
       {
         title: "break between trainings",
-        unit: "d",
+        unit: "days",
         values: stats.lastTrained(this.sets)
       }
     ];
