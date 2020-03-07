@@ -1,24 +1,9 @@
 import { ExerciseSet } from "./exerciseSets";
-import dayjs from "dayjs";
 
 type Data = Record<string, string | number>;
 type GroupedData = Record<string, Data[]>;
 
 export class Stats {
-  public daysTrainedThisWeek(sets: ExerciseSet[]): string[] {
-    const beginningOfWeek = dayjs()
-      .set("day", 1)
-      .set("hour", 0)
-      .set("minute", 0)
-      .set("second", 0)
-      .set("millisecond", 0);
-
-    return sets
-      .filter(set => dayjs(set.date).isAfter(beginningOfWeek))
-      .map(set => set.date.toDateString())
-      .filter(this.isUnique);
-  }
-
   public lastTrained(sets: ExerciseSet[]): number[] {
     const timestamps = sets
       .map(set => set.date)

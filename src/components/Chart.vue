@@ -64,27 +64,27 @@ export default class Chart extends Vue {
       {
         title: "average weight",
         unit: "kg",
-        values: stats.averageWeights(this.sets)
+        values: stats.averageWeights(this.sets).slice(-10)
       },
       {
         title: "average reps",
         unit: "",
-        values: stats.averageReps(this.sets)
+        values: stats.averageReps(this.sets).slice(-10)
       },
       {
         title: "number of sets",
         unit: "",
-        values: stats.numberOfSets(this.sets)
+        values: stats.numberOfSets(this.sets).slice(-10)
       },
       {
         title: "sum of all reps",
         unit: "kg",
-        values: stats.sumWeights(this.sets)
+        values: stats.sumWeights(this.sets).slice(-10)
       },
       {
-        title: "break between trainings",
+        title: "break between workouts",
         unit: "days",
-        values: stats.lastTrained(this.sets)
+        values: stats.lastTrained(this.sets).slice(-10)
       }
     ];
   }

@@ -14,7 +14,7 @@
           >
         </v-card-actions>
         <v-card-text class="pa-0">
-          <v-list two-line>
+          <v-list color="transparent">
             <v-list-item-group>
               <v-list-item
                 v-for="(exercise, i) in selectableExercises"
@@ -22,20 +22,23 @@
                 @click="select(exercise)"
               >
                 <v-list-item-content>
-                  <v-list-item-title>{{ exercise.name }}</v-list-item-title>
-                  <v-list-item-subtitle>{{
-                    renderSubtitle(exercise)
-                  }}</v-list-item-subtitle>
+                  <div class="subtitle-1">{{ exercise.name }}</div>
+                  <div>
+                    <span
+                      class="mr-1 accent--text text-lowercase font-weight-light"
+                      v-for="category in exercise.categories"
+                      :key="exercise + category"
+                      >#{{ category.replace(" ", "_") }}
+                    </span>
+                  </div>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
           </v-list>
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions class="px-4 pb-4">
           <v-text-field
-            filled
             hide-details
-            clearable
             label="Search exercise"
             append-icon="mdi-magnify"
             v-model="search"
@@ -49,20 +52,18 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import exercises, { Exercise } from "../services/training/exercises";
-import exerciseSets from "../services/training/exerciseSets";
-import stats from "../services/training/stats";
+import exerciseSets, { ExerciseSet } from "../services/training/exerciseSets";
 import spreadsheet from "../services/spreadsheet/spreadsheetApi";
+import { EmptySheetError, NoColumnError } from "../services/spreadsheet/errors";
 import { Kpi } from "../services/kpi";
-
-interface ExerciseWithStats extends Exercise {
-  dates: string[];
-  score: number;
-}
+import dayjs from "dayjs";
+import bus from "../bus";
 
 @Component
 export default class ExerciseSelection extends Vue {
   private open = false;
-  private exercises: ExerciseWithStats[] = [];
+  private exercises: Exercise[] = [];
+  private categoryScores: Record<string, number> = {};
   private search = "";
   private busy = false;
 
@@ -73,58 +74,119 @@ export default class ExerciseSelection extends Vue {
     return `https://docs.google.com/spreadsheets/d/${spreadsheet.spreadsheetId}/edit#gid=0`;
   }
 
-  private get selectableExercises(): ExerciseWithStats[] {
+  private get selectableExercises(): Exercise[] {
     return this.exercises
       .filter(e => !this.selectedExercises.includes(e.name))
-      .filter(e => e.name.toLowerCase().includes(this.search.toLowerCase()));
+      .filter(e =>
+        e.name
+          .concat(e.alias.join())
+          .concat(e.categories.join())
+          .toLowerCase()
+          .includes(this.search.toLowerCase())
+      );
   }
 
   private mounted(): void {
-    this.getExercisesAndStats();
+    this.buildExerciseList();
+    bus.$on("updated:sets", () => this.sortExercises());
   }
 
   @Kpi("SELECT_EXERCISE")
-  private select(exercise: ExerciseWithStats): void {
+  private select(exercise: Exercise): void {
     this.$emit("selected", exercise.name);
-    this.open = false;
+    this.search = "";
+    setTimeout(() => (this.open = false), 200);
   }
 
-  private async getExercisesAndStats(): Promise<void> {
+  private async buildExerciseList(): Promise<void> {
     this.busy = true;
-    const allSets = await exerciseSets.getSets();
-    const allExercises = (await exercises.getExercises()) as ExerciseWithStats[];
-    this.exercises = allExercises
-      .map(exercise => {
-        exercise.dates = stats.daysTrainedThisWeek(
-          allSets.filter(set => set.exercise === exercise.name)
-        );
-        return exercise;
-      })
-      .map((exercise, i, array) => {
-        exercise.score = array
-          .filter(other => other.category === exercise.category)
-          .map(other => other.dates)
-          .flat()
-          .filter(this.isUnique).length;
-        return exercise;
-      })
-      .sort((a, b) => a.score - b.score);
+    try {
+      this.exercises = await exercises.getExercises();
+      await this.sortExercises();
+    } catch (error) {
+      if (error instanceof EmptySheetError || error instanceof NoColumnError) {
+        this.handleSpreedsheetError();
+      }
+      console.warn(error);
+    }
     this.busy = false;
+  }
+
+  private handleSpreedsheetError(): void {
+    bus.$emit(
+      "error",
+      "The selected spreadsheet is not compatible with the current version of Workout Companion. Sorry!"
+    );
+    this.$router.replace({ name: "pickSpreadsheet" });
+  }
+
+  private async calcCategoryScores(): Promise<void> {
+    this.categoryScores = {};
+    const allSets = await exerciseSets.getSets();
+    const setsThisWeek = this.getSetsThisWeek(allSets);
+    Object.values(this.getCategoriesEachDay(setsThisWeek))
+      .flat()
+      .forEach(category => {
+        this.categoryScores[category]
+          ? this.categoryScores[category]++
+          : (this.categoryScores[category] = 1);
+      });
+    console.debug("categoryScoresthis", this.categoryScores);
+  }
+
+  private getSetsThisWeek(sets: ExerciseSet[]): ExerciseSet[] {
+    const beginningOfWeek = dayjs()
+      .set("d", 1)
+      .set("h", 0)
+      .set("m", 0)
+      .set("s", 0)
+      .set("ms", 0);
+    return sets.filter(set => dayjs(set.date).isAfter(beginningOfWeek));
+  }
+
+  private getCategoriesEachDay(sets: ExerciseSet[]): Record<string, string[]> {
+    const categoriesEachDay: Record<string, string[]> = {};
+    this.exercises.forEach(exercise => {
+      this.getDatesForExercise(exercise.name, sets).forEach(date => {
+        categoriesEachDay[date] = categoriesEachDay[date]
+          ? categoriesEachDay[date]
+              .concat(exercise.categories)
+              .filter(this.isUnique)
+          : exercise.categories;
+      });
+    });
+    return categoriesEachDay;
+  }
+
+  private getDatesForExercise(exercise: string, sets: ExerciseSet[]): string[] {
+    return sets
+      .filter(set => set.exercise === exercise)
+      .map(set => set.date.toDateString())
+      .filter(this.isUnique);
   }
 
   private isUnique(element: string, index: number, array: string[]): boolean {
     return array.indexOf(element) === index;
   }
 
-  private renderSubtitle(exercise: ExerciseWithStats): string {
-    if (exercise.score < 1) {
-      return "Start training these muscles!";
-    }
-    if (exercise.score < 2) {
-      return "At least one more to go!";
-    } else {
-      return "";
-    }
+  /**
+   * Scores exercises that have more untrained categories higher
+   */
+  private calcExerciseScore(exercise: Exercise): number {
+    return exercise.categories
+      .map(this.getCategoryScore)
+      .filter(score => score < 2).length;
+  }
+
+  private getCategoryScore(category: string): number {
+    return this.categoryScores[category] || 0;
+  }
+
+  private async sortExercises(): Promise<void> {
+    await this.calcCategoryScores();
+    this.exercises.sort(
+      (a, b) => this.calcExerciseScore(b) - this.calcExerciseScore(a)
+    );
   }
 }
 </script>

@@ -6,17 +6,15 @@
       <v-expansion-panels class="ma-1" popout hover v-model="activePanel">
         <v-expansion-panel v-for="(exercise, i) in exercises" :key="i">
           <v-expansion-panel-header>
-            <v-row>
-              <v-btn icon @click="removeExercise(i)">
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-              <v-col>
-                <span>{{ exercise }}</span>
-              </v-col>
-            </v-row>
+            <span class="subtitle-1">{{ exercise }}</span>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <Sets :date="date" :exercise="exercise" class="mb-5" />
+            <Sets
+              :date="date"
+              :exercise="exercise"
+              class="mb-5"
+              @canceled="removeExercise(i)"
+            />
             <Chart :exercise="exercise" />
           </v-expansion-panel-content>
         </v-expansion-panel>

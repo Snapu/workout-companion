@@ -1,11 +1,11 @@
 <template>
   <v-container class="pa-0">
-    <v-row no-gutters>
+    <v-row no-gutters class="ma-1">
       <v-col>
         <v-btn icon large @click="$router.go(-1)" class="my-3"
           ><v-icon> mdi-arrow-left</v-icon></v-btn
         >
-        <v-card class="ma-1">
+        <v-card>
           <v-card-text>
             <h1>Privacy policy</h1>
             <p>

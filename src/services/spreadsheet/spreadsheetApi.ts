@@ -1,4 +1,4 @@
-import { SpreadsheetNotPickedError } from "./spreadsheetErrors";
+import { SpreadsheetNotPickedError } from "./errors";
 import { State } from "../state";
 import spreadsheetTemplate, { sheets } from "./spreadsheetTemplate";
 

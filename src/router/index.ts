@@ -5,6 +5,7 @@ import PrivacyPolicyEn from "../views/PrivacyPolicy/PrivacyPolicyEn.vue";
 import Training from "../views/Training.vue";
 import Login from "../views/Login.vue";
 import PickSpreadsheet from "../views/PickSpreadsheet.vue";
+import NewFeatures from "../views/NewFeatures.vue";
 import spreadsheet from "../services/spreadsheet/spreadsheetApi";
 
 Vue.use(VueRouter);
@@ -34,6 +35,11 @@ const routes = [
     path: "/training",
     name: "training",
     component: Training
+  },
+  {
+    path: "/newFeatures",
+    name: "newFeatures",
+    component: NewFeatures
   }
 ];
 

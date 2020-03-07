@@ -3,8 +3,8 @@
     <v-row no-gutters>
       <v-col>
         <v-card class="ma-1">
-          <v-card-title>Connect to spreadsheet</v-card-title>
           <v-card-text>
+            <h1>Connect to spreadsheet</h1>
             <p>
               If you are using this app for the first time you can create a new
               spreadsheet in your Google Drive to store your workout data.
@@ -22,7 +22,7 @@
             >
           </v-card-actions>
           <v-card-actions>
-            <v-btn large block text @click="pick()">pick</v-btn>
+            <v-btn large block text color="primary" @click="pick()">pick</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>

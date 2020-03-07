@@ -14,7 +14,7 @@
       <tbody>
         <tr v-for="(set, i) in sets" :key="i">
           <td>
-            <span class="title accent--text">{{ i + 1 }}</span>
+            <span class="display-1 accent--text">{{ i + 1 }}</span>
           </td>
           <td>
             <v-text-field
@@ -44,6 +44,17 @@
     </v-simple-table>
     <v-btn class="mt-5" block large color="primary" @click="add">
       add set
+    </v-btn>
+    <v-btn
+      v-if="!sets.length"
+      class="mt-4"
+      block
+      large
+      text
+      color="primary"
+      @click="cancel"
+    >
+      cancel workout
     </v-btn>
   </div>
 </template>
@@ -108,6 +119,14 @@ export default class Sets extends Vue {
           }
     );
     await this.syncToSpreadsheet();
+  }
+
+  private cancel(): void {
+    if (this.sets.length) {
+      console.error("Sets must be empty to cancel workout.");
+    } else {
+      setTimeout(() => this.$emit("canceled"), 200);
+    }
   }
 }
 </script>

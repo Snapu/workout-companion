@@ -1,8 +1,11 @@
 import spreadsheet from "../spreadsheet/spreadsheetApi";
+import { assertIndex, assertColumns } from "../spreadsheet/assertedAccess";
 
 export interface Exercise {
   name: string;
-  category: string;
+  alias: string[];
+  categories: string[];
+  source: string;
 }
 
 export class Exercises {
@@ -10,23 +13,17 @@ export class Exercises {
 
   public async getExercises(): Promise<Exercise[]> {
     const values = await spreadsheet.getValues(Exercises.SHEET_NAME);
-    const columns = values.shift();
-    if (!columns) {
-      throw new Error(`No columns in ${Exercises.SHEET_NAME}`);
-    }
+    const columns = assertColumns(values);
     return values.map((row: string[]) => ({
-      name: row[this.assertIndex(columns, "name")],
-      category: row[this.assertIndex(columns, "category")]
+      name: row[assertIndex(columns, "name")],
+      alias: this.toArray(row[assertIndex(columns, "alias")]),
+      categories: this.toArray(row[assertIndex(columns, "categories")]),
+      source: row[assertIndex(columns, "source")]
     }));
   }
 
-  private assertIndex(columns: string[], column: string) {
-    const i = columns.indexOf(column);
-    if (i < 0) {
-      console.debug("assertIndex", columns);
-      throw new Error(`No column ${column} in ${Exercises.SHEET_NAME}`);
-    }
-    return i;
+  private toArray(value: string): string[] {
+    return value.split(",").map(e => e.trim());
   }
 }
 
