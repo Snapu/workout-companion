@@ -33,11 +33,16 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import spreadsheet from "../services/spreadsheet/spreadsheetApi";
+import exerciseSets from "../services/training/exerciseSets";
 import { Kpi } from "../services/kpi";
 
 @Component
 export default class PickSpreadsheet extends Vue {
   private createLoading = false;
+
+  private mounted(): void {
+    exerciseSets.clearCache();
+  }
 
   @Kpi("CREATE_SPREADSHEET")
   private async create(): Promise<void> {

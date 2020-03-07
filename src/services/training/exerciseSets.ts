@@ -15,6 +15,10 @@ export class ExerciseSets {
 
   private cache: ExerciseSet[] = [];
 
+  public clearCache(): void {
+    this.cache = [];
+  }
+
   public async getSets(exercise?: string, date?: Date): Promise<ExerciseSet[]> {
     if (!this.cache.length) {
       const values = await this.getLastValues();

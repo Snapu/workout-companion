@@ -13,7 +13,7 @@
       v-model="snackbar"
       top
       multi-line
-      :timeout="100000"
+      :timeout="10000"
       color="error"
     >
       {{ errorMessage }}
