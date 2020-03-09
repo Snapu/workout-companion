@@ -3,7 +3,10 @@
     <v-row no-gutters>
       <v-col>
         <v-card class="ma-1">
-          <h1>Workout Companion</h1>
+          <v-card-text>
+            <h1>Workout Companion</h1>
+            <p></p>
+          </v-card-text>
           <v-card-actions>
             <v-btn block large color="primary" @click="login()"
               >login with Google</v-btn
