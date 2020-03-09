@@ -75,6 +75,10 @@ export default class Sets extends Vue {
 
   private busy = false;
 
+  private get defaultSetKey(): string {
+    return `defaultSet:${this.exercise}`;
+  }
+
   private mounted(): void {
     this.restoreViewFromSpreadsheet();
   }
@@ -99,6 +103,7 @@ export default class Sets extends Vue {
     this.busy = true;
     if (this.sets.length) {
       await exerciseSets.updateSets(this.sets);
+      this.updateDefaultSet();
     } else {
       await exerciseSets.clearDay(this.date, this.exercise);
     }
@@ -110,13 +115,7 @@ export default class Sets extends Vue {
     this.sets.push(
       this.sets.length
         ? { ...this.sets[this.sets.length - 1] }
-        : {
-            date: this.date,
-            exercise: this.exercise,
-            set: 1,
-            reps: 0,
-            weight: 0
-          }
+        : this.getDefaultSet()
     );
     await this.syncToSpreadsheet();
   }
@@ -127,6 +126,24 @@ export default class Sets extends Vue {
     } else {
       setTimeout(() => this.$emit("canceled"), 200);
     }
+  }
+
+  private updateDefaultSet(): void {
+    const reps = Math.max(...this.sets.map(set => set.reps));
+    const weight = Math.max(...this.sets.map(set => set.weight));
+    localStorage[this.defaultSetKey] = JSON.stringify({ reps, weight });
+  }
+
+  private getDefaultSet(): ExerciseSet {
+    const defaultSet = {
+      date: this.date,
+      exercise: this.exercise,
+      set: 1,
+      reps: 0,
+      weight: 0
+    };
+    const item = localStorage[this.defaultSetKey];
+    return item ? { ...defaultSet, ...JSON.parse(item) } : defaultSet;
   }
 }
 </script>
