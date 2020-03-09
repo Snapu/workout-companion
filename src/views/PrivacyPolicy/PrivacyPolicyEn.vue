@@ -27,6 +27,14 @@
               From the same Spreadsheet data is obtained to display your workout
               progress in the Workout Companion App.
             </p>
+            <p>
+              We send general usage statistics to the logging system of the
+              Google Cloud platform (Google Stackdriver). User-related data are
+              not logged. Only a unique key is generated for each device with
+              which the logs are annotated. The purpose of this annotation is
+              that recurring users are recognized without having to access
+              definite user characteristics.
+            </p>
             <h3>Google APIs</h3>
             <p>
               When you log in with Google, you will be asked to give our app
