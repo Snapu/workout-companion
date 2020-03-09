@@ -29,17 +29,20 @@ const routes = [
   {
     path: "/pickSpreadsheet",
     name: "pickSpreadsheet",
-    component: PickSpreadsheet
+    component: PickSpreadsheet,
+    meta: { requiresAuth: true }
   },
   {
     path: "/training",
     name: "training",
-    component: Training
+    component: Training,
+    meta: { requiresAuth: true }
   },
   {
     path: "/newFeatures",
     name: "newFeatures",
-    component: NewFeatures
+    component: NewFeatures,
+    meta: { requiresAuth: true }
   }
 ];
 
@@ -53,7 +56,7 @@ router.beforeEach(async (to, from, next) => {
     next();
   } else if (auth && !spreadsheet.isPicked() && to.name !== "pickSpreadsheet") {
     next({ name: "pickSpreadsheet" });
-  } else if (!auth && to.name !== "login") {
+  } else if (!auth && to.matched.some(record => record.meta.requiresAuth)) {
     next({ name: "login" });
   } else {
     next();
