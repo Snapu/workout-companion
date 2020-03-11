@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import exercises, { Exercise } from "../services/training/exercises";
 import exerciseSets, { ExerciseSet } from "../services/training/exerciseSets";
 import spreadsheet from "../services/spreadsheet/spreadsheetApi";
@@ -170,18 +170,26 @@ export default class ExerciseSelection extends Vue {
   }
 
   /**
-   * Scores exercises that have more untrained categories higher
+   * Scores exercises that have more untrained categories higher.
+   * Ingores categories that have been trained today.
    */
   private calcExerciseScore(exercise: Exercise): number {
-    return exercise.categories
-      .map(this.getCategoryScore)
-      .filter(score => score < 2).length;
+    return exercise.categories.filter(
+      c => this.getCategoryScore(c) < 2 && !this.isCategoryTrainedToday(c)
+    ).length;
+  }
+
+  private isCategoryTrainedToday(category: string): boolean {
+    return this.selectedExercises
+      .map(name => this.exercises.find(e => e.name === name))
+      .some(e => e?.categories.includes(category));
   }
 
   private getCategoryScore(category: string): number {
     return this.categoryScores[category] || 0;
   }
 
+  @Watch("selectedExercises")
   private async sortExercises(): Promise<void> {
     await this.calcCategoryScores();
     this.exercises.sort(
