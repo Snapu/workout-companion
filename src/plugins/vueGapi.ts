@@ -1,5 +1,5 @@
 import Vue from "vue";
-import vueGapi from "vue-gapi";
+import VueGapi from "vue-gapi";
 
 const CLIENT_ID =
   "970630032404-0lcms230234dprq6fjcjuvhfqro0f334.apps.googleusercontent.com";
@@ -13,4 +13,4 @@ const apiConfig = {
     "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file"
 };
 
-Vue.use(vueGapi, apiConfig);
+Vue.use(VueGapi, apiConfig);

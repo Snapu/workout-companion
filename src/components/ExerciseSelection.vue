@@ -1,20 +1,25 @@
 <template>
   <div>
-    <v-btn icon large class="ma-3" :loading="busy" @click="open = true">
+    <v-btn
+      icon
+      large
+      class="ma-3"
+      :loading="busy"
+      @click="open = true"
+      id="welcome-tour-0"
+    >
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-bottom-sheet v-model="open" scrollable>
       <!-- scrollable expects v-card and v-card-text-->
       <v-card tile>
         <v-card-actions>
-          <v-btn icon @click="open = false"><v-icon>mdi-close</v-icon></v-btn>
-          <v-spacer></v-spacer>
-          <v-btn icon :href="url" target="_blank"
+          <v-btn id="select-exercise-tour-2" icon :href="url" target="_blank"
             ><v-icon>mdi-pencil</v-icon></v-btn
           >
         </v-card-actions>
         <v-card-text class="pa-0">
-          <v-list color="transparent">
+          <v-list id="select-exercise-tour-1" color="transparent">
             <v-list-item-group>
               <v-list-item
                 v-for="(exercise, i) in selectableExercises"
@@ -36,14 +41,16 @@
             </v-list-item-group>
           </v-list>
         </v-card-text>
-        <v-card-actions class="px-4 pb-4">
+        <v-card-actions class="px-4 pb-8">
           <v-text-field
+            id="select-exercise-tour-0"
             hide-details
             label="Search exercise"
             append-icon="mdi-magnify"
             v-model="search"
           ></v-text-field>
         </v-card-actions>
+        <SelectExerciseTour v-if="open" />
       </v-card>
     </v-bottom-sheet>
   </div>
@@ -58,8 +65,9 @@ import { EmptySheetError, NoColumnError } from "../services/spreadsheet/errors";
 import { Kpi } from "../services/kpi";
 import dayjs from "dayjs";
 import bus from "../bus";
+import SelectExerciseTour from "./tours/SelectExerciseTour.vue";
 
-@Component
+@Component({ components: { SelectExerciseTour } })
 export default class ExerciseSelection extends Vue {
   private open = false;
   private exercises: Exercise[] = [];

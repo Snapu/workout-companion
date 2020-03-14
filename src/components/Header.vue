@@ -1,26 +1,61 @@
 <template>
-  <v-card tile color="primary">
-    <v-card-title>
-      <span class="white--text headline">{{ today }}</span>
-      <v-spacer></v-spacer>
-      <v-btn dark icon large :href="url" target="_blank">
-        <v-icon>mdi-file-table</v-icon>
-      </v-btn>
-    </v-card-title>
-  </v-card>
+  <div>
+    <div @click="hideCalendar = !hideCalendar" class="no-calendar-body">
+      <v-date-picker v-model="date" tile full-width disabled></v-date-picker>
+    </div>
+    <v-expand-transition>
+      <v-date-picker
+        id="welcome-tour-1"
+        v-if="!hideCalendar"
+        v-model="date"
+        no-title
+        tile
+        full-width
+        readonly
+        show-current
+        :events="events"
+      ></v-date-picker>
+    </v-expand-transition>
+  </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import dayjs from "dayjs";
-import spreadsheet from "../services/spreadsheet/spreadsheetApi";
+import { Component, Vue, Prop, Watch } from "vue-property-decorator";
+import exerciseSets from "../services/training/exerciseSets";
 
 @Component
 export default class Header extends Vue {
-  private today = dayjs().format("dddd, MMMM D");
+  private date = new Date().toISOString().split("T")[0];
+  private events: string[] = [];
+  private hideCalendar = false;
 
-  private get url(): string {
-    return `https://docs.google.com/spreadsheets/d/${spreadsheet.spreadsheetId}/edit#gid=1`;
+  @Prop({ required: true }) private collapsed = false;
+
+  private mounted(): void {
+    this.loadEvents();
+  }
+
+  private async loadEvents(): Promise<void> {
+    const sets = await exerciseSets.getSets();
+    this.events = sets.map(s => s.date.toISOString().split("T")[0]);
+  }
+
+  @Watch("collapsed")
+  private toggleHideCalendar(): void {
+    this.hideCalendar = this.collapsed;
   }
 }
 </script>
+
+<style>
+.v-picker {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+.no-calendar-body {
+  cursor: pointer;
+}
+.no-calendar-body .v-picker__body {
+  display: none;
+}
+</style>

@@ -9,7 +9,7 @@ export default new Vuetify({
       light: {
         // https://material.io/design/color/the-color-system.html#tools-for-picking-colors
         primary: "#483B6B",
-        secondary: "53392B", //#01579b
+        secondary: "FB8C00",
         accent: "#5C7137",
         anchor: "#757575"
       }

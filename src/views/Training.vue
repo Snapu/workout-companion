@@ -1,6 +1,6 @@
 <template>
   <v-container class="pa-0">
-    <Header />
+    <Header :collapsed="exercises.length ? true : false" />
     <!-- Exercises -->
     <v-row no-gutters class="pt-5">
       <v-expansion-panels class="ma-1" popout hover v-model="activePanel">
@@ -29,6 +29,7 @@
       />
       <v-spacer></v-spacer>
     </v-row>
+    <WelcomeTour />
   </v-container>
 </template>
 
@@ -38,10 +39,13 @@ import Chart from "@/components/Chart.vue";
 import ExerciseSelection from "@/components/ExerciseSelection.vue";
 import Header from "@/components/Header.vue";
 import Sets from "@/components/Sets.vue";
+import WelcomeTour from "@/components/tours/WelcomeTour.vue";
 import exerciseSets from "../services/training/exerciseSets";
 import { Kpi } from "../services/kpi";
 
-@Component({ components: { Chart, ExerciseSelection, Header, Sets } })
+@Component({
+  components: { Chart, ExerciseSelection, Header, Sets, WelcomeTour }
+})
 export default class Training extends Vue {
   private activePanel: number | null = null;
   private date = new Date();

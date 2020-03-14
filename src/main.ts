@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import vuetify from "./plugins/vuetify";
 import "./plugins/vueGapi";
+import "./plugins/vueTour";
 
 Vue.config.productionTip = false;
 
