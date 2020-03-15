@@ -1,43 +1,46 @@
 <template>
-  <v-tour
-    :name="name"
-    :steps="steps"
-    :callbacks="callbacks"
-    :options="{ highlight: false }"
-  >
-    <template slot-scope="tour">
-      <transition name="fade">
-        <template v-for="(step, index) of tour.steps">
-          <v-step
-            v-if="tour.currentStep === index"
-            :key="index"
-            :step="step"
-            :previous-step="tour.previousStep"
-            :next-step="tour.nextStep"
-            :stop="tour.stop"
-            :is-first="tour.isFirst"
-            :is-last="tour.isLast"
-            :labels="tour.labels"
-            :highlight="tour.highlight"
-          >
-            <div slot="actions">
-              <v-btn
-                block
-                text
-                color="white"
-                @click="
-                  tour.currentStep == tour.steps.length - 1
-                    ? tour.stop()
-                    : tour.nextStep()
-                "
-                >Okay</v-btn
-              >
-            </div>
-          </v-step>
-        </template>
-      </transition>
-    </template>
-  </v-tour>
+  <div>
+    <v-tour
+      :name="name"
+      :steps="steps"
+      :callbacks="callbacks"
+      :options="{ highlight: false }"
+    >
+      <template slot-scope="tour">
+        <transition name="fade">
+          <template v-for="(step, index) of tour.steps">
+            <v-step
+              v-if="tour.currentStep === index"
+              :key="index"
+              :step="step"
+              :previous-step="tour.previousStep"
+              :next-step="tour.nextStep"
+              :stop="tour.stop"
+              :is-first="tour.isFirst"
+              :is-last="tour.isLast"
+              :labels="tour.labels"
+              :highlight="tour.highlight"
+            >
+              <div slot="actions">
+                <v-btn
+                  block
+                  text
+                  color="white"
+                  @click="
+                    tour.currentStep == tour.steps.length - 1
+                      ? tour.stop()
+                      : tour.nextStep()
+                  "
+                  >Okay</v-btn
+                >
+              </div>
+            </v-step>
+          </template>
+        </transition>
+      </template>
+    </v-tour>
+    <div v-if="isRunning" class="tour--block-background"></div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -48,14 +51,26 @@ export default class Tour extends Vue {
   @Prop({ required: true }) private name!: string;
   @Prop({ type: Array, required: true }) private steps!: {}[];
 
+  private isRunning = false;
+
   private callbacks = {
-    onStop: () => (localStorage[this.name] = true)
+    onStop: () => this.stop()
   };
 
   private mounted(): void {
     if (!localStorage[this.name]) {
-      setTimeout(() => this.$tours[this.name].start(), 700);
+      setTimeout(() => this.start(), 700);
     }
+  }
+
+  private start(): void {
+    this.isRunning = true;
+    this.$tours[this.name].start();
+  }
+
+  private stop(): void {
+    this.isRunning = false;
+    localStorage[this.name] = true;
   }
 }
 </script>
@@ -93,6 +108,15 @@ export default class Tour extends Vue {
   border-bottom-color: transparent !important;
 }
 .v-tour__target--highlighted {
-  box-shadow: 0 0 0 99999px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 0 0 99999px rgba(0, 0, 0, 0.1) !important;
+}
+.tour--block-background {
+  display: flex;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
 }
 </style>
