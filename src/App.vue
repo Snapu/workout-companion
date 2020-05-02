@@ -3,7 +3,7 @@
     <router-view />
     <v-spacer></v-spacer>
     <div id="nav">
-      <router-link to="/newFeatures">Vote for Features</router-link>
+      <router-link v-if="isSignedIn" to="/newFeatures">Vote for Features</router-link>
       <p></p>
       <router-link to="/legalNotice">Legal Notice</router-link>
       <span>|</span>
@@ -29,9 +29,11 @@ import bus from "./bus";
 export default class App extends Vue {
   private snackbar = false;
   private errorMessage = "";
+  private isSignedIn = false;
 
-  private mounted(): void {
+  private async mounted(): Promise<void> {
     bus.$on("error", this.showError);
+    this.isSignedIn = await this.$gapi.isSignedIn();
   }
 
   private showError(message: string): void {
