@@ -1,5 +1,7 @@
 # Workout Companion
 
+![Preview](preview.png)
+
 ## Project setup
 ```
 npm install
