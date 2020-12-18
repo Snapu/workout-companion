@@ -62,7 +62,7 @@ import exercises, { Exercise } from "../services/training/exercises";
 import exerciseSets, { ExerciseSet } from "../services/training/exerciseSets";
 import spreadsheet from "../services/spreadsheet/spreadsheetApi";
 import { EmptySheetError, NoColumnError } from "../services/spreadsheet/errors";
-import { Kpi } from "../services/kpi";
+import { Log } from "../services/logger";
 import dayjs from "dayjs";
 import bus from "../bus";
 import SelectExerciseTour from "./tours/SelectExerciseTour.vue";
@@ -99,7 +99,7 @@ export default class ExerciseSelection extends Vue {
     bus.$on("updated:sets", () => this.sortExercises());
   }
 
-  @Kpi("SELECT_EXERCISE")
+  @Log("SELECT_EXERCISE")
   private select(exercise: Exercise): void {
     this.$emit("selected", exercise.name);
     this.search = "";

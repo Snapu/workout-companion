@@ -41,7 +41,7 @@ import Header from "@/components/Header.vue";
 import Sets from "@/components/Sets.vue";
 import WelcomeTour from "@/components/tours/WelcomeTour.vue";
 import exerciseSets from "../services/training/exerciseSets";
-import { Kpi } from "../services/kpi";
+import { Log } from "../services/logger";
 
 @Component({
   components: { Chart, ExerciseSelection, Header, Sets, WelcomeTour }
@@ -51,7 +51,7 @@ export default class Training extends Vue {
   private date = new Date();
   private exercises: string[] = [];
 
-  @Kpi("VIEW_TRAINING")
+  @Log("VIEW_TRAINING")
   private mounted(): void {
     this.restoreTraining();
   }

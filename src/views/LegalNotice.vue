@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import logger, { Kpi } from "../services/kpi";
+import logger, { Log } from "../services/logger";
 
 @Component
 export default class LegalNotice extends Vue {
@@ -40,7 +40,7 @@ export default class LegalNotice extends Vue {
 
   private loggerId = logger.id;
 
-  @Kpi("VIEW_LEGAL_NOTICE")
+  @Log("VIEW_LEGAL_NOTICE")
   private mounted(): void {}
 }
 </script>

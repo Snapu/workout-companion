@@ -52,7 +52,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Kpi } from "../services/kpi";
+import { Log } from "../services/logger";
 
 @Component
 export default class NewFeatures extends Vue {
@@ -77,18 +77,18 @@ export default class NewFeatures extends Vue {
     }
   ];
 
-  @Kpi("VIEW_NEW_FEATURES")
+  @Log("VIEW_NEW_FEATURES")
   private mounted(): void {
     console.log("mounted VIEW_NEW_FEATURES");
   }
 
-  @Kpi("VOTE_UP", true)
+  @Log("VOTE_UP", true)
   private voteUp(featureTitle: string): void {
     this.markVoted(featureTitle, "up");
     console.log(`voted up for "${featureTitle}"`);
   }
 
-  @Kpi("VOTE_DOWN", true)
+  @Log("VOTE_DOWN", true)
   private voteDown(featureTitle: string): void {
     this.markVoted(featureTitle, "down");
     console.log(`voted down for "${featureTitle}"`);

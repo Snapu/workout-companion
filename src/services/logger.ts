@@ -2,7 +2,7 @@ import { StackdriverLogger } from "@josros/stackdriver-logger";
 import { v4 } from "uuid";
 import { State } from "./state";
 
-class KpiLogger {
+class Logger {
   @State()
   public id: string | null = null;
   private stackdriver: StackdriverLogger;
@@ -42,11 +42,11 @@ class KpiLogger {
   }
 }
 
-const logger = new KpiLogger();
+const logger = new Logger();
 
 export default logger;
 
-export function Kpi(key: string, logArgs: boolean = false) {
+export function Log(msg: string, logArgs: boolean = false) {
   return function(
     target: any,
     propertyKey: string,
@@ -57,7 +57,7 @@ export function Kpi(key: string, logArgs: boolean = false) {
     const method = target.constructor.name + "." + propertyKey;
 
     const createKpis = (start: number, args: any, error?: Error) => ({
-      key,
+      msg,
       method,
       duration: Date.now() - start,
       ...(logArgs ? { args } : {}),

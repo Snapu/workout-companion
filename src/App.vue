@@ -3,7 +3,9 @@
     <router-view />
     <v-spacer></v-spacer>
     <div id="nav">
-      <router-link v-if="isSignedIn" to="/newFeatures">Vote for Features</router-link>
+      <router-link v-if="isSignedIn" to="/newFeatures"
+        >Vote for Features</router-link
+      >
       <p></p>
       <router-link to="/legalNotice">Legal Notice</router-link>
       <span>|</span>

@@ -63,7 +63,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import exerciseSets, { ExerciseSet } from "../services/training/exerciseSets";
 import { Debounce } from "../services/debounce";
-import { Kpi } from "../services/kpi";
+import { Log } from "../services/logger";
 import bus from "../bus";
 
 @Component
@@ -98,7 +98,7 @@ export default class Sets extends Vue {
   }
 
   @Debounce(1000)
-  @Kpi("SYNC_SETS")
+  @Log("SYNC_SETS")
   private async syncToSpreadsheet(): Promise<void> {
     this.busy = true;
     if (this.sets.length) {
