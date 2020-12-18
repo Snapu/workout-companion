@@ -139,7 +139,7 @@ export default class ExerciseSelection extends Vue {
           ? this.categoryScores[category]++
           : (this.categoryScores[category] = 1);
       });
-    console.debug("categoryScoresthis", this.categoryScores);
+    console.debug("calcCategoryScores", this.categoryScores);
   }
 
   private getSetsThisWeek(sets: ExerciseSet[]): ExerciseSet[] {
