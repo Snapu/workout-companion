@@ -46,7 +46,7 @@ const logger = new Logger();
 
 export default logger;
 
-export function Log(msg: string, logArgs: boolean = false) {
+export function Log(message: string, logArgs: boolean = false) {
   return function(
     target: any,
     propertyKey: string,
@@ -56,8 +56,8 @@ export function Log(msg: string, logArgs: boolean = false) {
 
     const method = target.constructor.name + "." + propertyKey;
 
-    const createKpis = (start: number, args: any, error?: Error) => ({
-      msg,
+    const createLog = (start: number, args: any, error?: Error) => ({
+      message,
       method,
       duration: Date.now() - start,
       ...(logArgs ? { args } : {}),
@@ -76,10 +76,10 @@ export function Log(msg: string, logArgs: boolean = false) {
       const start = Date.now();
       try {
         const result = await original.apply(this, args);
-        await logger.log(createKpis(start, args));
+        await logger.log(createLog(start, args));
         return result;
       } catch (error) {
-        await logger.log(createKpis(start, args, error));
+        await logger.log(createLog(start, args, error));
         throw error;
       }
     };
